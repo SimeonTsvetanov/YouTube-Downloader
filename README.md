@@ -26,5 +26,5 @@ Bypass the Windows Security as it's ported with pyinstaller (no way around it)
 # As long as the link is correct:
 The program will download the selected Song/Playlist.
 
-Short link for the REPO: #TODO
+Short link for the REPO: #https://bit.ly/YouTubeDownloaderSTS
 ```
