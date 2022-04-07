@@ -1,5 +1,5 @@
 # YouTube Downloader
-![program screenshot]()
+![program screenshot](https://github.com/SimeonTsvetanov/YouTube-Downloader/blob/main/Screenshot.png)
 
 YouTube Downloader is extremely simple program for downloading songs or playlists (in audio or video) from YouTube.
 
