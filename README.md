@@ -11,7 +11,7 @@ YouTube Downloader is extremely simple program for downloading songs or playlist
 - The App will download only mp3 or mp4 files in the best possible quality!
 
 ## Installation
-NO INSTALLATION required Just Download the [YouTube Downloader.exe]() Application on your PC. 
+NO INSTALLATION required Just Download the [YouTube Downloader.exe](https://github.com/SimeonTsvetanov/YouTube-Downloader/blob/main/YouTube%20Downloader.exe) Application on your PC. 
 - Bypass the Windows Security (It seems to have problem with programs ported with pyinstaller.)
 
 ```bash
