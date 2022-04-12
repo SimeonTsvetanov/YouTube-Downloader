@@ -6,6 +6,7 @@ from pytube import YouTube
 from pytube import Playlist
 import ctypes  # Used to make the app look better
 import platform  # Used to make the app look better
+import os
 
 
 class App:
@@ -56,6 +57,12 @@ class App:
         except Exception:
             return False
 
+    @staticmethod
+    def convert_to_mp3(file):
+        base, ext = os.path.splitext(file)
+        new_file = base + '.mp3'
+        os.rename(file, new_file)
+
     def download(self, song, playlist, audio, video, link):
         """
         bool :param song: True if we wish to download just a song, else False
@@ -71,7 +78,8 @@ class App:
             try:
                 self.popups('downloading')
                 if audio:
-                    s.streams.get_audio_only().download()  # Get the best audio quality and download it.
+                    song = s.streams.get_audio_only().download()  # Get the best audio quality and download it.
+                    App.convert_to_mp3(song)
                     self.popups('downloaded')
                 elif video:
                     s.streams.get_highest_resolution().download()  # Get the best video quality and download it.
@@ -87,8 +95,8 @@ class App:
                 for s in p:
                     # Check for the wanted format:
                     if audio:
-                        yt = YouTube(s).streams.get_audio_only()  # Filter the playlist to audio mp3 only
-                        yt.download(output_path=p.title)  # And download it.
+                        yt = YouTube(s).streams.get_audio_only().download(output_path=p.title)  # Filter the playlist to audio mp3 only
+                        App.convert_to_mp3(yt)
                     elif video:
                         yt = YouTube(s).streams.get_highest_resolution()  # Filter the playlist to video mp4 only
                         yt.download(output_path=p.title)  # And download it.
