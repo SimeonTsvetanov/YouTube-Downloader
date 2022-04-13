@@ -7,6 +7,7 @@ from pytube import Playlist
 import ctypes  # Used to make the app look better
 import platform  # Used to make the app look better
 import os
+from pytube import exceptions
 
 
 class App:
@@ -50,15 +51,24 @@ class App:
             ctypes.windll.shcore.SetProcessDpiAwareness(True)
 
     @staticmethod
-    def validate_url(url):
-        try:
-            YouTube(url)
-            return True
-        except Exception:
-            return False
+    def validate_url(url, song, playlist):
+        if playlist:
+            try:
+                if Playlist(url).length > 0:
+                    return True
+            except (KeyError, exceptions.RegexMatchError) as e:
+                return False
+        elif song:
+            try:
+                YouTube(url)
+                return True
+            except (KeyError, exceptions.RegexMatchError) as e:
+                return False
 
     @staticmethod
     def convert_to_mp3(file):
+        # Method will rename the extension from (.whatever) to .mp3
+        # It's quite a dummy way. Yet it works just fine :D
         base, ext = os.path.splitext(file)
         new_file = base + '.mp3'
         os.rename(file, new_file)
@@ -72,40 +82,40 @@ class App:
         str(URL) :param link: the link from YouTube we wish to download
         :return: The program will Download the selected song/playlist in the selected format
         """
-
         if song:
-            s = YouTube(link)  # Create the YouTube Object
-            try:
-                self.popups('downloading')
-                if audio:
-                    song = s.streams.get_audio_only().download()  # Get the best audio quality and download it.
-                    App.convert_to_mp3(song)
-                    self.popups('downloaded')
-                elif video:
-                    s.streams.get_highest_resolution().download()  # Get the best video quality and download it.
-                    self.popups('downloaded')
-            except Exception as message:
-                self.popups('invalid message', message)
+            self.popups('downloading')
+            if audio:
+                App.download_audio(link)
+            elif video:
+                App.download_video(link)
+            self.popups('downloaded')
 
         elif playlist:
             p = Playlist(link)  # Create the YouTube Playlist Object
-            if len(p) > 0:
-                self.popups('downloading')
-                # Now let's iterate through the playlist
-                for s in p:
-                    # Check for the wanted format:
-                    if audio:
-                        yt = YouTube(s).streams.get_audio_only().download(output_path=p.title)  # Filter the playlist to audio mp3 only
-                        App.convert_to_mp3(yt)
-                    elif video:
-                        yt = YouTube(s).streams.get_highest_resolution()  # Filter the playlist to video mp4 only
-                        yt.download(output_path=p.title)  # And download it.
-                self.popups('downloaded')
-            else:
-                self.popups('not public')
+            self.popups('downloading')
+            for s in p:  # Now let's iterate through the playlist
+                if audio:
+                    App.download_audio(s, output_path=p.title)
+                elif video:
+                    App.download_video(s, output_path=p.title)
+            self.popups('downloaded')
 
-    # @staticmethod
-    def popups(self, type_popup, *args):
+    @staticmethod
+    def download_audio(song_to_download, output_path=''):
+        song_to_download = YouTube(song_to_download)    # Create the YouTube object from link
+        # Get the best audio quality and download it:
+        song_to_convert = song_to_download.streams.get_audio_only().download(output_path)
+        # Convert it to mp3:
+        App.convert_to_mp3(song_to_convert)
+
+    @staticmethod
+    def download_video(video_to_download, output_path=''):
+        video_to_download = YouTube(video_to_download)  # Create the YouTube object from link
+        # Get the best video quality and download it:
+        video_to_download.streams.get_highest_resolution().download(output_path)
+
+    @staticmethod
+    def popups(type_popup, *args):
         if type_popup == 'invalid link':
             pg.popup(
                 'Invalid Link!',
@@ -156,19 +166,17 @@ class App:
                 # get all the data on the screen:
                 s, p, a, v, li = data[0], data[1], data[2], data[3], data[4]
                 # Check if the URL is valid and if so DOWNLOAD whatever is wanted!
-                if self.validate_url(li):
+                if self.validate_url(li, s, p):
                     self.download(song=s, playlist=p, audio=a, video=v, link=li)
                 # If the link is invalid just update the LABEL
                 else:
                     self.popups(type_popup='invalid link')
-        # Close the window
 
 
 def run():
-    # Create the Application and Run it!
-    app = App()
-    app.make_dpi_aware()
-    app.start()
+    app = App()  # Create the Application
+    app.make_dpi_aware()  # Fix the resolution
+    app.start()  # Start the Application
 
 
 if __name__ == '__main__':
