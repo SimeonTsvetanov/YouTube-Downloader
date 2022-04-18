@@ -8,7 +8,7 @@ YouTube Downloader is extremely simple program for downloading songs or playlist
 ## Disclaimer
 - It's build for testing purposes only. Use at your own risk. 
 - Downloading copyrighted videos without permission is a criminal act.
-- The software is build using [Pytube](https://pytube.io/en/latest/), [PySimpleGUI](https://pysimplegui.readthedocs.io/en/latest/) and [Python](https://www.python.org/).
+- The software is build using [Pytube](https://pytube.io/en/latest/), [PySimpleGUI](https://pysimplegui.readthedocs.io/en/latest/), [MoviePy](https://zulko.github.io/moviepy/) and [Python](https://www.python.org/).
 - It will run only on Windows.
 - The App will download only mp3 or mp4 files in the best possible quality!
 
