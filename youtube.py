@@ -19,10 +19,11 @@ class App:
         self.window = pg.Window(
             self.name,
             self.layout(),
-            # no_titlebar=True,
             return_keyboard_events=True,
             grab_anywhere=True,
         )
+        self.conversion_threads = []  # Keeps all the conversion threads
+        self.download_threads = []  # Keeps all the download threads
 
     @staticmethod
     def layout():
@@ -31,8 +32,8 @@ class App:
         Just take a look at the code below it is pretty simple.
         """
         output = [
-            [pg.Text("YouTube Downloader", text_color="red", font=("Helvetica", 12), key="label", pad=(4, 10))],
-            [pg.ProgressBar(100, orientation='h', size=(38, 10), border_width=4, key='progress_bar')],
+            [pg.ProgressBar(100, orientation='h', size=(39, 1), border_width=4, key='progress_bar')],
+            [pg.Text(f"{9*' '}YouTube Downloader\n", text_color="red", font=("Monaco", 12), key="label", pad=(4, 10))],
             [pg.Text("Select Playlist or Song:", pad=(4, 10))],
             [pg.Radio("Song", 'playlist_or_song', default=True, size=(10, 1)),
              pg.Radio("Playlist", 'playlist_or_song', size=(10, 1))],
@@ -40,7 +41,7 @@ class App:
             [pg.Radio("Audio", 'audio_or_video', default=True, size=(10, 1)),
              pg.Radio("Video", 'audio_or_video', size=(10, 1))],
             [pg.Text("Paste the YouTube link here:", pad=(4, 10))],
-            [pg.InputText(do_not_clear=False, pad=(4, 10))],
+            [pg.InputText(do_not_clear=False, pad=(0, 10), size=(47, 2))],
             [pg.Button('Download', button_color="red", bind_return_key=True, size=(20, 2), pad=((145, 0), (20, 20)))]
         ]
         return output
@@ -67,72 +68,87 @@ class App:
                 return False
 
     def download(self, song, playlist, audio, video, link):
-        """
-        bool :param song: True if we wish to download just a song, else False
-        bool :param playlist: True if we wish to download the whole Playlist, else False
-        bool :param audio: True if we wish to download in MP3 format, else False
-        bool :param video: True if we wish to download in MP4 format, else False
-        str(URL) :param link: the link from YouTube we wish to download
-        :return: The program will Download the selected song/playlist in the selected format
-        """
+        # If song was selected: create a thread for downloading the song and add it to the thread pool.
         if song:
-            self.messgages('downloading', YouTube(link).title)  # Update the label
+            # Thread will include additional arguments as we need them passed for other funcitons
+            t = threading.Thread(target=self.download_media, args=(link, '', audio, 0, 1,), daemon=True)
+            self.download_threads.append([t, YouTube(link).title, 0, 1])
 
-            # Start a thread to download the song:
-            t = threading.Thread(target=self.download_media, args=(link, '', audio,), daemon=True)
-            t.start()
-            t.join()
-
+        # If Playlist was selected: Create the Playlist object and iterate through it.
         elif playlist:
             p = Playlist(link)  # Create the YouTube Playlist Object
             for i, s in enumerate(p):  # Now let's iterate through the playlist
-                self.messgages('downloading', YouTube(s).title)  # Show the song that's being downloaded
+                # Create the Thread and append it to the thread pool.
+                # Thread will include additional arguments as we need them passed for other funcitons
+                t = threading.Thread(target=self.download_media, args=(s, p.title, audio, i, len(p),), daemon=True)
+                self.download_threads.append([t, str(YouTube(s).title), int(i) + 1, len(p) + 1])
 
-                # Start a thread to download the song:
-                t = threading.Thread(target=self.download_media, args=(s, p.title, audio,), daemon=True)
-                t.start()
-                t.join()
+        # Now lets start Downloading:
+        for thread_data in self.download_threads:
+            thread = thread_data[0]  # Get the thread
+            title = thread_data[1]  # Get the Song Title
+            i = thread_data[2] + 1  # Get the starting index for the progress bar
+            length = thread_data[3]  # Get the total length of the progress bar
+            self.messgages('downloading', title[:42])  # Update the Label to show the song name we are downloading
+            thread.start()  # Start the Thread
+            thread.join()  # Join the Thread so that the app will wait for the download to complete
+            self.window['progress_bar'].update(i, length)  # Update the progress_bar
+            self.window.refresh()  # Refresh the window
 
-                self.window['progress_bar'].update(i + 1, len(p))  # Update the progress_bar
+        # If audio was selected lets start converting the files to .mp3
+        if audio:
+            for conv_thread_data in self.conversion_threads:
+                thread = conv_thread_data[0]  # Get the thread
+                name = conv_thread_data[1]  # Get the Song Title
+                path = conv_thread_data[2]  # Get the path of the file
+                index = conv_thread_data[3] + 1  # Get the starting index
+                length = conv_thread_data[4]  # Get the total length of the progress bar
+                self.messgages('converting', name[:42])  # Update the Label to show the song name we are converting
+                thread.start()  # Start the Thread
+                thread.join()  # Join the Thread so that the app will wait for the download to complete
+                os.remove(path)  # Remove the video (.mp4) file
+                self.window['progress_bar'].update(index, length)  # Update the progress_bar
+                self.window.refresh()  # Refresh the Window
 
-        self.popups('downloaded')
-        self.messgages('downloaded')
+        self.download_threads.clear()  # Empty the download_threads
+        self.conversion_threads.clear()  # Empty the conversion_threads
 
-    @staticmethod
-    def download_media(video_to_download, output_path='', mp3=False):
+        self.window.Element('progress_bar').update(0, 100)
+        self.popups('downloaded')  # Make a popup to show that we are DONE!
+        self.messgages('downloaded')  # Change the Label back to ORIGINAL!
+
+    def download_media(self, video_to_download, output_path='', mp3=False, index=0, length=1):
         video_to_download = YouTube(video_to_download)  # Create the YouTube object from link
         # Get the best video quality and download it:
         video_name = video_to_download.streams.get_highest_resolution().download(output_path)
+
+        # Sort the naming Dilema:
         path, file_name = os.path.split(video_name)
+        name, ext = os.path.splitext(video_name)
+        audio_name = name + '.mp3'
 
-        if mp3:  # IF we want .mp3 only file:
-
-            # First lets sort the naming dilema:
-            name, ext = os.path.splitext(video_name)
-            audio_name = name + '.mp3'
-
-            # And then start a thread to convert the video to mp3:
-            c = threading.Thread(target=App.convert_to_mp3, args=(video_name, audio_name,), daemon=True)
-            c.start()
-            c.join()
-
-            # After it's done delete the old video file.
-            os.remove(video_name)
+        # And then start a thread to convert the video to mp3 (including additional data for other functions):
+        c = threading.Thread(target=App.convert_to_mp3, args=(video_name, audio_name,), daemon=True)
+        self.conversion_threads.append([c, file_name, video_name, index, length])
 
     @staticmethod
     def convert_to_mp3(video_name, audio_name):
-        # It's a magic threading trick
+        # It's a magic trick that needs threading...
         clip = AudioFileClip(video_name)
         clip.write_audiofile(audio_name)
         clip.close()
 
     def messgages(self, m, song_name=None):
         if m == 'downloading':
-            new_text = f"Downloading\n{song_name[:40]}"
-            self.window.Element('label').update(new_text, text_color='white')
+            new_text = f"Downloading Video:\n{song_name[:35]}"
+            self.window.Element('label').update(new_text, text_color='gray')
+            self.window.refresh()
+        if m == 'converting':
+            new_text = f"Converting to mp3:\n{song_name[:35]}"
+            self.window.Element('label').update(new_text, text_color='gray')
             self.window.refresh()
         elif m == 'downloaded':
-            self.window.Element('label').update('YouTube Downloader', text_color='red')
+            self.window.Element('label').update(f"{9*' '}YouTube Downloader\n", text_color="red")
 
     @staticmethod
     def popups(type_popup, *args):
