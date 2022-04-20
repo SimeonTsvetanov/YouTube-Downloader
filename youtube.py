@@ -8,7 +8,7 @@ from pytube import exceptions  # Catch exceptions if the liberary is broken
 import ctypes  # Used to make the app look better
 import platform  # Used to make the app look better
 import os  # Imported in order to work with files and paths in the system
-from moviepy.audio.io.AudioFileClip import AudioFileClip  # Liverary to convert video files(.mp4) to audio(.mp3)
+from moviepy.audio.io.AudioFileClip import AudioFileClip  # Liverary to convert video files to audio(.mp3)
 import threading  # Using Threading for downloading and converting files
 
 
@@ -117,19 +117,22 @@ class App:
         self.popups('downloaded')  # Make a popup to show that we are DONE!
         self.messgages('downloaded')  # Change the Label back to ORIGINAL!
 
-    def download_media(self, video_to_download, output_path='', mp3=False, index=0, length=1):
-        video_to_download = YouTube(video_to_download)  # Create the YouTube object from link
+    def download_media(self, link, output_path='', mp3=False, index=0, length=1):
+        file_to_download = YouTube(link)  # Create the YouTube object from link
+        file_name = ''
         # Get the best video quality and download it:
-        video_name = video_to_download.streams.get_highest_resolution().download(output_path)
-
+        if not mp3:
+            file_name = file_to_download.streams.get_highest_resolution().download(output_path)
+        elif mp3:
+            file_name = file_to_download.streams.get_audio_only().download(output_path)
         # Sort the naming Dilema:
-        path, file_name = os.path.split(video_name)
-        name, ext = os.path.splitext(video_name)
+        path, file = os.path.split(file_name)
+        name, ext = os.path.splitext(file_name)
         audio_name = name + '.mp3'
 
         # And then start a thread to convert the video to mp3 (including additional data for other functions):
-        c = threading.Thread(target=App.convert_to_mp3, args=(video_name, audio_name,), daemon=True)
-        self.conversion_threads.append([c, file_name, video_name, index, length])
+        c = threading.Thread(target=App.convert_to_mp3, args=(file_name, audio_name,), daemon=True)
+        self.conversion_threads.append([c, file, file_name, index, length])
 
     @staticmethod
     def convert_to_mp3(video_name, audio_name):
@@ -140,7 +143,7 @@ class App:
 
     def messgages(self, m, song_name=None):
         if m == 'downloading':
-            new_text = f"Downloading Video:\n{song_name[:35]}"
+            new_text = f"Downloading:\n{song_name[:35]}"
             self.window.Element('label').update(new_text, text_color='gray')
             self.window.refresh()
         if m == 'converting':
