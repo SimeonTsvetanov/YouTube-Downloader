@@ -1,7 +1,7 @@
 # pyinstaller installation command: pyinstaller --onefile -w --icon=youtube_icon.ico youtube.py
 
 # Importing the libraries needed for the project
-import PySimpleGUI as pg  # The GUI liverary
+import PySimpleGUI as pg  # The GUI Lib
 from pytube import YouTube  # Liverary for dowloading YouTube media
 from pytube import Playlist  # Work with Playlists
 from pytube import exceptions  # Catch exceptions if the liberary is broken
