@@ -2,13 +2,13 @@
 
 # Importing the libraries needed for the project
 import PySimpleGUI as pg  # The GUI Lib
-from pytube import YouTube  # Liverary for dowloading YouTube media
+from pytube import YouTube  # Library for downloading YouTube media
 from pytube import Playlist  # Work with Playlists
-from pytube import exceptions  # Catch exceptions if the liberary is broken
+from pytube import exceptions  # Catch exceptions if the library is broken
 import ctypes  # Used to make the app look better
 import platform  # Used to make the app look better
 import os  # Imported in order to work with files and paths in the system
-from moviepy.audio.io.AudioFileClip import AudioFileClip  # Liverary to convert video files to audio(.mp3)
+from moviepy.audio.io.AudioFileClip import AudioFileClip  # Library to convert video files to audio(.mp3)
 import threading  # Using Threading for downloading and converting files
 
 
