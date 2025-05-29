@@ -1,0 +1,44 @@
+{
+  "name": "downloader",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --x64",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "A cross-platform YouTube downloader desktop application built with Electron, Node.js, HTML, CSS, and JavaScript. Supports downloading individual videos or playlists as video or MP3 audio, with a modern Material Design UI and robust error handling.",
+  "dependencies": {
+    "ffmpeg-static": "^5.2.0",
+    "ytdlp-nodejs": "^2.3.0"
+  },
+  "devDependencies": {
+    "electron": "^36.3.2",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.simeontsvetanov.youtubedownloader",
+    "productName": "YouTube Downloader",
+    "directories": {
+      "buildResources": "icons"
+    },
+    "files": [
+      "**/*",
+      "icons/*"
+    ],
+    "win": {
+      "icon": "icons/icon.ico",
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}

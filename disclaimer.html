@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Disclaimer</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html,
+      body {
+        overflow: hidden;
+      }
+      body {
+        font-family: "Poppins", Arial, sans-serif;
+        background: #232323;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .disclaimer-box {
+        background: #232323;
+        border-radius: 14px;
+        padding: 32px 24px 24px 24px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        max-width: 340px;
+        color: #fff;
+      }
+      .disclaimer-text {
+        font-size: 1.1rem;
+        margin-bottom: 28px;
+      }
+      .button-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      button {
+        font-family: inherit;
+        font-size: 1rem;
+        padding: 8px 24px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+        background: #303134;
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(60, 60, 60, 0.13);
+      }
+      button:hover {
+        background: #444;
+      }
+      @media (prefers-color-scheme: light) {
+        body,
+        .disclaimer-box {
+          background: #fff;
+          color: #222;
+        }
+        button {
+          background: #f1f3f4;
+          color: #222;
+        }
+        button:hover {
+          background: #e0e0e0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="disclaimer-box">
+      <div class="disclaimer-text">
+        This application is made for educational purposes only. The developer
+        disclaims any liability for misuse of this software.
+      </div>
+      <div class="button-row">
+        <button class="ok-btn" id="okBtn">OK</button>
+        <button class="close-btn" id="closeBtn">Close</button>
+      </div>
+    </div>
+    <script>
+      const { ipcRenderer } = require("electron");
+      document.getElementById("okBtn").onclick = () =>
+        ipcRenderer.send("disclaimer-accepted");
+      document.getElementById("closeBtn").onclick = () =>
+        ipcRenderer.send("disclaimer-closed");
+    </script>
+  </body>
+</html>

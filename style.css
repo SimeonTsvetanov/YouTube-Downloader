@@ -1,0 +1,465 @@
+/* Material Design inspired dark/light theme, Poppins font */
+body {
+  font-family: "Poppins", Arial, sans-serif;
+  margin: 0;
+  background: #181818;
+  color: #fff;
+  transition: background 0.3s, color 0.3s;
+}
+body.light-theme {
+  background: #fafafa;
+  color: #222;
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: #232323;
+  border-bottom: 1px solid #333;
+  position: relative;
+}
+body.light-theme .navbar {
+  background: #fff;
+  border-bottom: 1px solid #eee;
+}
+.logo {
+  height: 32px;
+}
+.theme-switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+}
+.theme-switch input {
+  display: none;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #444;
+  border-radius: 24px;
+  transition: background 0.3s;
+}
+.theme-switch input:checked + .slider {
+  background: #ffd600;
+}
+.slider:before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+.theme-switch input:checked + .slider:before {
+  transform: translateX(24px);
+  background: #222;
+}
+.main-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 48px;
+  gap: 24px;
+}
+#ytUrl {
+  width: 90%;
+  max-width: 340px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  font-size: 1.1rem;
+  background: #232323;
+  color: #fff;
+  outline: none;
+  transition: background 0.3s, color 0.3s;
+}
+body.light-theme #ytUrl {
+  background: #fff;
+  color: #222;
+  border: 1px solid #bbb;
+}
+.download-type-switch {
+  display: flex;
+  gap: 24px;
+  font-size: 1.1rem;
+}
+.download-type-slider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0 0 0;
+}
+.slider-label {
+  font-size: 1.1rem;
+  color: #888;
+  transition: color 0.2s, font-weight 0.2s;
+}
+.slider-label.selected {
+  color: #fff;
+  font-weight: 500;
+}
+body.light-theme .slider-label.selected {
+  color: #222;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 28px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider.round {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #444;
+  border-radius: 28px;
+  transition: background 0.3s;
+}
+.switch input:checked + .slider.round {
+  background: #e53935;
+}
+.slider.round:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+.switch input:checked + .slider.round:before {
+  transform: translateX(20px);
+}
+#downloadBtn {
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 36px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(229, 57, 53, 0.15);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+#downloadBtn:hover {
+  background: #b71c1c;
+  box-shadow: 0 4px 16px rgba(229, 57, 53, 0.25);
+}
+.playlist-msg {
+  margin-top: 8px;
+  color: #ffd600;
+  font-size: 1rem;
+  text-align: center;
+}
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+  text-align: center;
+  padding: 10px 0;
+  background: transparent;
+  color: #888;
+  font-size: 0.95rem;
+}
+
+/* Material Design dialog and progress */
+#materialDialog {
+  position: absolute;
+  top: 48px;
+  left: 50%;
+  transform: translateX(-50%) scale(0.95);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-width: 0;
+  animation: md-fade-in 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.2s, opacity 0.2s;
+}
+#materialDialog.md-hide {
+  opacity: 0;
+  transform: translateX(-50%) scale(0.92);
+  pointer-events: none;
+  transition: transform 0.18s, opacity 0.18s;
+}
+.md-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(30, 30, 30, 0.18);
+  backdrop-filter: blur(6px);
+  z-index: 999;
+}
+.md-dialog {
+  position: relative;
+  background: #232323;
+  color: #fff;
+  border-radius: 14px;
+  min-width: 260px;
+  max-width: 340px;
+  padding: 24px 18px 16px 18px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  z-index: 1001;
+  text-align: center;
+  font-family: "Roboto", Arial, sans-serif;
+}
+.md-message {
+  font-size: 1.05rem;
+  margin-bottom: 18px;
+}
+.md-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+.md-btn {
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.98rem;
+  font-family: inherit;
+  padding: 7px 18px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(229, 57, 53, 0.13);
+}
+.md-btn:hover {
+  background: #b71c1c;
+}
+.md-btn.md-theme-btn {
+  background: #303134;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.98rem;
+  font-family: inherit;
+  padding: 7px 18px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(60, 60, 60, 0.13);
+}
+.md-btn.md-theme-btn:hover {
+  background: #444;
+}
+body.light-theme .md-btn.md-theme-btn {
+  background: #f1f3f4;
+  color: #222;
+}
+body.light-theme .md-btn.md-theme-btn:hover {
+  background: #e0e0e0;
+}
+@keyframes md-fade-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(0.98);
+  }
+}
+
+/* Blur body when dialog is up */
+body.md-blur .main-content,
+body.md-blur .navbar,
+body.md-blur footer {
+  filter: blur(5px) brightness(0.95);
+  pointer-events: none;
+  user-select: none;
+  transition: filter 0.2s;
+}
+
+/* Loading spinner for async actions */
+.md-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 18px auto 0 auto;
+  width: 36px;
+  height: 36px;
+}
+.md-spinner:after {
+  content: "";
+  display: block;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 4px solid #e53935;
+  border-top: 4px solid #ffd600;
+  animation: md-spin 0.8s linear infinite;
+}
+@keyframes md-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Cool loader animation */
+.loader {
+  width: 85px;
+  height: 25px;
+  --g1: conic-gradient(from 90deg at left 3px top 3px, #0000 90deg, #fff 0);
+  --g2: conic-gradient(
+    from -90deg at bottom 3px right 3px,
+    #0000 90deg,
+    #fff 0
+  );
+  background: var(--g1), var(--g1), var(--g1), var(--g2), var(--g2), var(--g2);
+  background-position: left, center, right;
+  background-repeat: no-repeat;
+  animation: l8 1s infinite;
+  margin: 0 auto 10px auto;
+}
+@keyframes l8 {
+  0% {
+    background-size: 25px 100%, 25px 100%, 25px 100%;
+  }
+  20% {
+    background-size: 25px 50%, 25px 100%, 25px 100%;
+  }
+  40% {
+    background-size: 25px 50%, 25px 50%, 25px 100%;
+  }
+  60% {
+    background-size: 25px 100%, 25px 50%, 25px 50%;
+  }
+  80% {
+    background-size: 25px 100%, 25px 100%, 25px 50%;
+  }
+  100% {
+    background-size: 25px 100%, 25px 100%, 25px 100%;
+  }
+}
+
+/* Downloading text with animated dots */
+.downloading-text {
+  font-size: 1.13rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: #fff;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.animated-dots::after {
+  content: "";
+  display: inline-block;
+  width: 1.2em;
+  text-align: left;
+  animation: dots-anim 1.2s steps(3, end) infinite;
+}
+@keyframes dots-anim {
+  0% {
+    content: "";
+  }
+  33% {
+    content: ".";
+  }
+  66% {
+    content: "..";
+  }
+  100% {
+    content: "...";
+  }
+}
+
+/* Playlist progress text */
+.playlist-progress {
+  font-size: 1.05rem;
+  color: #ffd600;
+  margin-top: 8px;
+  text-align: center;
+}
+
+/* Full-screen overlay progress UI */
+.progress-overlay-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(30, 30, 30, 0.18);
+  backdrop-filter: blur(6px);
+  z-index: 999;
+}
+#progressOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+#progressOverlay .progress-container {
+  background: #232323;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  padding: 36px 32px 28px 32px;
+  min-width: 260px;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: all;
+}
+.navbar-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+  margin: 0 12px;
+}
+#typewriterText.typewriter {
+  font-family: "Poppins", Arial, sans-serif;
+  font-size: 1.18rem;
+  font-weight: 600;
+  color: #f5f5f5; /* offwhite for dark theme */
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 2px solid #f5f5f5;
+  letter-spacing: 0.04em;
+  min-width: 0;
+  max-width: 100%;
+  display: inline-block;
+  box-sizing: border-box;
+}
+@media (max-width: 500px) {
+  #typewriterText.typewriter {
+    font-size: 0.98rem;
+  }
+}
+body.light-theme #typewriterText.typewriter {
+  color: #888;
+  border-right: 2px solid #888;
+}
