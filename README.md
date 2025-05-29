@@ -2,7 +2,10 @@
 
 A modern, cross-platform YouTube Downloader desktop app built with Electron, Node.js, HTML, CSS, and JavaScript.
 
-![App Logo](icons/youtube_downloader_logo.png)
+**App Screenshots (Dark & Light Mode):**
+
+![Dark mode](screenshot-dark.png)
+![Light mode](screenshot-light.png)
 
 ---
 
@@ -69,6 +72,8 @@ A modern, cross-platform YouTube Downloader desktop app built with Electron, Nod
 │   ├── icon.ico
 │   ├── youtube_downloader_logo.png
 │   └── README.txt
+├── screenshot-dark.png     # App screenshot (dark mode)
+├── screenshot-light.png    # App screenshot (light mode)
 └── dist/                   # Build output (not in repo)
 ```
 
