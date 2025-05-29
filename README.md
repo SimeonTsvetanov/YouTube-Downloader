@@ -54,7 +54,7 @@ A modern, cross-platform YouTube Downloader desktop app built with Electron, Nod
 ## 📦 Download
 
 - **Windows Installer:**
-  - Download the latest release from your cloud storage (Google Drive, Dropbox, etc.) and share the link here.
+  - Download the latest release from [here](https://drive.google.com/file/d/1ZXVPRsLxXcPu5wmVXbPkcd_4XBiZq4Nb/view?usp=sharing).
   - _Note: The installer is too large for direct GitHub upload. Please use the provided link._
 
 ---
