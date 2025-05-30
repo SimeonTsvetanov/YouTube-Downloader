@@ -44,7 +44,7 @@
       "node_modules/ytdlp-nodejs/bin/yt-dlp.exe",
       "node_modules/ytdlp-nodejs/bin/yt-dlp_macos",
       "node_modules/ytdlp-nodejs/bin/yt-dlp_linux",
-      "node_modules/ffmpeg-static/**"
+      "node_modules/ffmpeg-static/**/*"
     ]
   }
 }

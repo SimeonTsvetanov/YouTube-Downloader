@@ -32,11 +32,12 @@ A modern YouTube Downloader desktop app built with Electron, Node.js, HTML, CSS,
 
 ### **Windows Installer (Recommended)**
 
-📦 **[Download Latest Release](https://drive.google.com/file/d/1yF0GIoW8FyklPoa4fi8SYC_nLTvI9b5e/view?usp=sharing)**
+📦 **[Download Latest Release](https://drive.google.com/drive/folders/1YtY79mBeIS6k_Dr7gJkJLtl5acal9ZP5?usp=drive_link)**
 
-1. Click the link above to download the Windows installer
-2. Run the `.exe` file and follow the installation wizard
-3. Launch from Start Menu or Desktop shortcut
+1. Click the link above to access the download folder
+2. Download the latest Windows installer (`.exe` file)
+3. Run the installer and follow the installation wizard
+4. Launch from Start Menu or Desktop shortcut
 
 **System Requirements:**
 

@@ -23,6 +23,12 @@ function sanitizeFilename(filename) {
 
 // Theme toggle logic
 const themeToggle = document.getElementById("themeToggle");
+
+// Set default to dark theme
+themeToggle.checked = false;
+document.body.classList.add("dark-theme");
+document.body.classList.remove("light-theme");
+
 themeToggle.addEventListener("change", () => {
   document.body.classList.toggle("light-theme", themeToggle.checked);
   document.body.classList.toggle("dark-theme", !themeToggle.checked);

@@ -18,6 +18,9 @@ const fs = require("fs");
 const ytdlp = require("ytdlp-nodejs");
 const { spawn } = require("child_process");
 
+// Import ffmpeg-static to get the bundled ffmpeg binary path
+const ffmpegPath = require("ffmpeg-static");
+
 // Helper: Sanitize filename for Windows compatibility
 function sanitizeFilename(filename) {
   // Remove special characters and emojis, replace with underscore
@@ -149,7 +152,11 @@ ipcMain.on(
     { savePath, url, type, isPlaylist, downloadAll, playlistLength }
   ) => {
     const ytDlpPath = getYtDlpPath();
-    console.log("Using yt-dlp path:", ytDlpPath); // Test the executable before proceeding
+    const ffmpegPath = getFfmpegPath();
+    console.log("Using yt-dlp path:", ytDlpPath);
+    console.log("Using ffmpeg path:", ffmpegPath);
+
+    // Test the yt-dlp executable before proceeding
     try {
       const testProc = spawn(ytDlpPath, ["--version"]);
       testProc.on("error", (error) => {
@@ -174,12 +181,42 @@ ipcMain.on(
       return;
     }
 
-    // Verify the executable exists for non-system paths
+    // Test the ffmpeg executable before proceeding
+    try {
+      const ffmpegTestProc = spawn(ffmpegPath, ["-version"]);
+      ffmpegTestProc.on("error", (error) => {
+        console.error("ffmpeg test failed:", error.message);
+        console.error("Attempted ffmpeg path:", ffmpegPath);
+        event.sender.send("download-complete", {
+          success: false,
+          message: `ffmpeg executable test failed at path: ${ffmpegPath}\n\nError: ${error.message}\n\nThis app requires ffmpeg for video/audio processing. Please ensure the app was built correctly with npm run build.`,
+        });
+        return;
+      });
+    } catch (ffmpegTestError) {
+      console.error("ffmpeg spawn test failed:", ffmpegTestError.message);
+      console.error("Attempted ffmpeg path:", ffmpegPath);
+      event.sender.send("download-complete", {
+        success: false,
+        message: `Cannot start ffmpeg at path: ${ffmpegPath}\n\nError: ${ffmpegTestError.message}\n\nThis app requires ffmpeg for video/audio processing.`,
+      });
+      return;
+    } // Verify the yt-dlp executable exists for non-system paths
     if (ytDlpPath !== "yt-dlp" && !fs.existsSync(ytDlpPath)) {
       console.error("yt-dlp binary not found at:", ytDlpPath);
       event.sender.send("download-complete", {
         success: false,
         message: `yt-dlp binary not found at: ${ytDlpPath}. Please ensure ytdlp-nodejs is properly installed.`,
+      });
+      return;
+    }
+
+    // Verify the ffmpeg executable exists for non-system paths
+    if (ffmpegPath !== "ffmpeg" && !fs.existsSync(ffmpegPath)) {
+      console.error("ffmpeg binary not found at:", ffmpegPath);
+      event.sender.send("download-complete", {
+        success: false,
+        message: `ffmpeg binary not found at: ${ffmpegPath}. Please ensure ffmpeg-static is properly installed and bundled.`,
       });
       return;
     }
@@ -212,7 +249,9 @@ ipcMain.on(
             current: videos.indexOf(video) + 1,
           });
           event.sender.send("playlist-song-title", video.title);
-          const videoUrl = `https://www.youtube.com/watch?v=${video.id}`; // Step 3: Build download arguments with quality limits and metadata
+          const videoUrl = `https://www.youtube.com/watch?v=${video.id}`;
+
+          // Step 3: Build download arguments with quality limits and metadata
           let outArgs = [
             videoUrl,
             "-o",
@@ -222,6 +261,9 @@ ipcMain.on(
                 ? "%(artist,uploader|Unknown Artist)s - %(title)s.mp3"
                 : "%(artist,uploader|Unknown Artist)s - %(title)s.mp4"
             ),
+            // Set ffmpeg location
+            "--ffmpeg-location",
+            ffmpegPath,
             // Audio conversion arguments
             type === "audio" ? "-x" : null,
             type === "audio" ? "--audio-format" : null,
@@ -275,13 +317,14 @@ ipcMain.on(
         });
       } else {
         // Single video download logic
-        const outputPath = savePath;
-
-        // Build download arguments
+        const outputPath = savePath; // Build download arguments
         const outArgs = [
           url,
           "-o",
           outputPath,
+          // Set ffmpeg location
+          "--ffmpeg-location",
+          ffmpegPath,
           // Audio conversion arguments
           type === "audio" ? "-x" : null,
           type === "audio" ? "--audio-format" : null,
@@ -380,6 +423,56 @@ ipcMain.on(
     }
   }
 );
+
+// Helper function to get ffmpeg executable path
+function getFfmpegPath() {
+  try {
+    // Check if we're running in production (packaged app)
+    const isPackaged = app.isPackaged;
+
+    if (isPackaged) {
+      // In production, ffmpeg should be extracted to app.asar.unpacked
+      const unpackedPath = path.join(
+        process.resourcesPath,
+        "app.asar.unpacked",
+        "node_modules",
+        "ffmpeg-static",
+        "ffmpeg.exe"
+      );
+      if (fs.existsSync(unpackedPath)) {
+        console.log("Found ffmpeg at (unpacked):", unpackedPath);
+        return unpackedPath;
+      }
+
+      // Alternative unpacked location
+      const altUnpackedPath = path.join(
+        path.dirname(process.execPath),
+        "resources",
+        "app.asar.unpacked",
+        "node_modules",
+        "ffmpeg-static",
+        "ffmpeg.exe"
+      );
+      if (fs.existsSync(altUnpackedPath)) {
+        console.log("Found ffmpeg at (alt unpacked):", altUnpackedPath);
+        return altUnpackedPath;
+      }
+    }
+
+    // Development mode: Use ffmpeg-static package directly
+    if (ffmpegPath && fs.existsSync(ffmpegPath)) {
+      console.log("Found ffmpeg via ffmpeg-static:", ffmpegPath);
+      return ffmpegPath;
+    }
+
+    // Fallback to system PATH
+    console.log("Falling back to system PATH ffmpeg");
+    return "ffmpeg";
+  } catch (error) {
+    console.error("Error getting ffmpeg path:", error);
+    return "ffmpeg";
+  }
+}
 
 // Helper function to get yt-dlp executable path
 function getYtDlpPath() {
