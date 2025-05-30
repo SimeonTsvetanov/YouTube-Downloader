@@ -2,18 +2,16 @@
 
 A modern YouTube Downloader desktop app built with Electron, Node.js, HTML, CSS, and JavaScript for **Windows only**.
 
-<<<<<<< HEAD
+**App Screenshots (Dark & Light Mode):**
+
+![Dark mode](screenshot-dark.png)
+![Light mode](screenshot-light.png)
+
 ---
 
 ## 🖥️ Platform Support
 
 **Currently Windows Only** - This application is specifically designed and optimized for Windows 10 and Windows 11. Mac and Linux support may be added in future releases.
-=======
-**App Screenshots (Dark & Light Mode):**
-
-![Dark mode](screenshot-dark.png)
-![Light mode](screenshot-light.png)
->>>>>>> ebbff54445b43533ddf143ba99fc40d2edcfdbd4
 
 ---
 
@@ -50,7 +48,6 @@ A modern YouTube Downloader desktop app built with Electron, Node.js, HTML, CSS,
 
 ## 📁 File Types & Quality
 
-<<<<<<< HEAD
 ### **Audio Downloads**
 
 - **Format**: MP3 only
@@ -79,11 +76,6 @@ A modern YouTube Downloader desktop app built with Electron, Node.js, HTML, CSS,
 - Individual videos: `https://youtube.com/watch?v=...`
 - Playlists: `https://youtube.com/playlist?list=...`
 - Shortened links: `https://youtu.be/...`
-=======
-- **Windows Installer:**
-  - Download the latest release from [here](https://drive.google.com/file/d/1ZXVPRsLxXcPu5wmVXbPkcd_4XBiZq4Nb/view?usp=sharing).
-  - _Note: The installer is too large for direct GitHub upload. Please use the provided link._
->>>>>>> ebbff54445b43533ddf143ba99fc40d2edcfdbd4
 
 ---
 
