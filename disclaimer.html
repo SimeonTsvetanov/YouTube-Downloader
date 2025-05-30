@@ -91,6 +91,14 @@
         ipcRenderer.send("disclaimer-accepted");
       document.getElementById("closeBtn").onclick = () =>
         ipcRenderer.send("disclaimer-closed");
+      // Keyboard shortcuts: Enter = OK, Escape = Close
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          document.getElementById("okBtn").click();
+        } else if (e.key === "Escape") {
+          document.getElementById("closeBtn").click();
+        }
+      });
     </script>
   </body>
 </html>

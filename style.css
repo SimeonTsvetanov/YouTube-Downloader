@@ -185,13 +185,14 @@ footer {
 
 /* Material Design dialog and progress */
 #materialDialog {
-  position: absolute;
-  top: 48px;
+  position: fixed;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%) scale(0.95);
+  /* Start and end at the same centered position, only animate scale/opacity */
+  transform: translate(-50%, -50%) scale(0.95);
   z-index: 1000;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   min-width: 0;
   animation: md-fade-in 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -199,7 +200,7 @@ footer {
 }
 #materialDialog.md-hide {
   opacity: 0;
-  transform: translateX(-50%) scale(0.92);
+  transform: translate(-50%, -50%) scale(0.92);
   pointer-events: none;
   transition: transform 0.18s, opacity 0.18s;
 }
@@ -213,6 +214,9 @@ footer {
   backdrop-filter: blur(6px);
   z-index: 999;
 }
+body.light-theme .md-overlay {
+  background: rgba(120, 120, 120, 0.15);
+}
 .md-dialog {
   position: relative;
   background: #232323;
@@ -225,6 +229,11 @@ footer {
   z-index: 1001;
   text-align: center;
   font-family: "Roboto", Arial, sans-serif;
+}
+body.light-theme .md-dialog {
+  background: #fff;
+  color: #222;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
 }
 .md-message {
   font-size: 1.05rem;
@@ -268,6 +277,7 @@ footer {
 body.light-theme .md-btn.md-theme-btn {
   background: #f1f3f4;
   color: #222;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 body.light-theme .md-btn.md-theme-btn:hover {
   background: #e0e0e0;
@@ -275,11 +285,11 @@ body.light-theme .md-btn.md-theme-btn:hover {
 @keyframes md-fade-in {
   from {
     opacity: 0;
-    transform: translateX(-50%) scale(0.92);
+    transform: translate(-50%, -50%) scale(0.92);
   }
   to {
     opacity: 1;
-    transform: translateX(-50%) scale(0.98);
+    transform: translate(-50%, -50%) scale(0.98);
   }
 }
 
@@ -337,6 +347,14 @@ body.md-blur footer {
   animation: l8 1s infinite;
   margin: 0 auto 10px auto;
 }
+body.light-theme .loader {
+  --g1: conic-gradient(from 90deg at left 3px top 3px, #0000 90deg, #222 0);
+  --g2: conic-gradient(
+    from -90deg at bottom 3px right 3px,
+    #0000 90deg,
+    #222 0
+  );
+}
 @keyframes l8 {
   0% {
     background-size: 25px 100%, 25px 100%, 25px 100%;
@@ -366,6 +384,9 @@ body.md-blur footer {
   color: #fff;
   margin-bottom: 8px;
   text-align: center;
+}
+body.light-theme .downloading-text {
+  color: #222;
 }
 .animated-dots::after {
   content: "";
@@ -408,6 +429,9 @@ body.md-blur footer {
   backdrop-filter: blur(6px);
   z-index: 999;
 }
+body.light-theme .progress-overlay-bg {
+  background: rgba(120, 120, 120, 0.15);
+}
 #progressOverlay {
   position: fixed;
   top: 0;
@@ -431,6 +455,10 @@ body.md-blur footer {
   flex-direction: column;
   align-items: center;
   pointer-events: all;
+}
+body.light-theme #progressOverlay .progress-container {
+  background: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
 }
 .navbar-center {
   flex: 1;
