@@ -1,4 +1,4 @@
-# [YouTube Downloader](https://drive.google.com/drive/folders/1YtY79mBeIS6k_Dr7gJkJLtl5acal9ZP5?usp=drive_link)
+# [YouTube Downloader](https://drive.google.com/drive/folders/1YtY79mBeIS6k_Dr7gJkJLtl5acal9ZP5?usp=sharing)
 
 A modern YouTube Downloader desktop app built with Electron, Node.js, HTML, CSS, and JavaScript for **Windows only**.
 
@@ -32,7 +32,7 @@ A modern YouTube Downloader desktop app built with Electron, Node.js, HTML, CSS,
 
 ### **Windows Installer (Recommended)**
 
-📦 **[Download Latest Release](https://drive.google.com/drive/folders/1YtY79mBeIS6k_Dr7gJkJLtl5acal9ZP5?usp=drive_link)**
+📦 **[Download Latest Release](https://drive.google.com/drive/folders/1YtY79mBeIS6k_Dr7gJkJLtl5acal9ZP5?usp=sharing)**
 
 1. Click the link above to access the download folder
 2. Download the latest Windows installer (`.exe` file)
